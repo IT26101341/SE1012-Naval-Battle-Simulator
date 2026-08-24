@@ -1,16 +1,13 @@
 #include <stdio.h>
-#include "types.h"
-/* The model is introduced before generation or battle behaviour. */
+#include "core.h"
+/* A small interactive driver demonstrates all four input functions. */
 int main(void)
 {
-    Game game = {0};
-    Result result = {0};
-    game.battle.type = 'U';
-    game.battle.health = 1.0;
-    result.sankBy = -1;
-    printf("Battleship %c, health %.1f, sink source %d\n",
-           game.battle.type, game.battle.health, result.sankBy);
-    printf("Capacity: %d escorts, %d path points, %d projectiles\n",
-           MAX_ESCORTS, MAX_PATH, MAX_ACTIVE_SHOTS);
+    int count = read_int("Number of escorts (1-40): ", 1, MAX_ESCORTS);
+    double speed = read_double("Shell speed (20-500): ", 20, 500);
+    char ship = read_ship_type("Battleship code: ");
+    int confirmed = read_yes_no("Use these values? (y/n): ");
+    printf("Escorts=%d speed=%.1f ship=%c confirmed=%d\n",
+           count, speed, ship, confirmed);
     return 0;
 }
