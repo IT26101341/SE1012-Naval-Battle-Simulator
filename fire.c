@@ -17,7 +17,7 @@ int fire_battleship(Game *game, int feature, double minAngle,
     }
     game->battle.shots = shotNumber;
     game->battle.currentImpact = damage;
-    game->battle.nextFire = game->currentTime; /* No reload delay yet. */
+    game->battle.nextFire = feature >= PART_2A ? game->currentTime + game->battle.reload : game->currentTime; /* Reload begins in Part 2A. */
     result->battleShots++;
     if (result->attackCount < MAX_ATTACKS) {
         result->attackOrder[result->attackCount] = game->escorts[target].id;

@@ -19,15 +19,52 @@ int choose_target(const Game *game, int feature, double minAngle,
                   double *flightTime)
 {
     int i;
-    double angle;
-    (void)feature;
-    /* Use the first reachable escort; threat ranking is added on Day 8. */
+    int best = -1;
+    double bestScore = -1.0;
+
+    /* Check every living escort and remember the highest score. */
     for (i = 0; i < game->escortCount; i++) {
-        const Escort *e = &game->escorts[i];
-        if (e->alive && pending_damage(game, i) < e->health - 0.000001 &&
-            find_shot(game->battle.position, e->position, 0,
-                      game->battle.maxSpeed, minAngle, 90, flightTime, &angle))
-            return i;
+        const Escort *escort = &game->escorts[i];
+        double distance;
+        double time;
+        double angle;
+        double threatTime;
+        double threatAngle;
+        double power;
+        double score;
+        int canAttack;
+
+        /* Do not waste another shell on a dead or already doomed escort. */
+        if (!escort->alive ||
+            pending_damage(game, i) >= escort->health - 0.000001) {
+            continue;
+        }
+        /* Skip targets that cannot be reached with the allowed gun angles. */
+        if (!find_shot(game->battle.position, escort->position, 0.0,
+                       game->battle.maxSpeed, minAngle, 90.0,
+                       &time, &angle)) {
+            continue;
+        }
+        distance = position_distance(game->battle.position, escort->position);
+        power = feature == PART_1A ? 1.0 : escort->currentImpact;
+        if (power <= 0.0) {
+            power = escort->impact;
+        }
+        /* A gun that can still hit B is a greater threat than a harmless E. */
+        canAttack = (escort->stepShots == 0) &&
+                    find_shot(escort->position, game->battle.position,
+                              escort->minSpeed, escort->maxSpeed,
+                              escort->minAngle, escort->maxAngle,
+                              &threatTime, &threatAngle);
+        score = power / (distance + 1.0);
+        if (canAttack) {
+            score = score + 1.0;
+        }
+        if (score > bestScore) {
+            bestScore = score;
+            best = i;
+            *flightTime = time;
+        }
     }
-    return -1;
+    return best;
 }

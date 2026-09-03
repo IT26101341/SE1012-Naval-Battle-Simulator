@@ -7,10 +7,10 @@
 void start_menu(Game *game)
 {
     int feature, field, i;
-    for (i = 1; i <= 2; i++)
+    for (i = 1; i <= 3; i++)
         printf("%d. %s\n", i, feature_name(i));
     puts("0. Run all available combinations");
-    feature = read_int("Feature: ", 0, 2);
+    feature = read_int("Feature: ", 0, 3);
     if (feature == 0) { run_all_simulations(game); return; }
     field = STATIC_FIELD;
     run_one_simulation(game, feature, field);

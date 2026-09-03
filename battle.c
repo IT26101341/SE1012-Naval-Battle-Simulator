@@ -18,7 +18,7 @@ double run_position(Game *game, int feature, double minAngle,
         if (game->battle.alive) {
             fired = fire_battleship(game, feature, minAngle, report, result);
             /* Early features have no reload delay, so B fires at every target. */
-            if (1) {
+            if (feature < PART_2A) {
                 int tries = 1;
                 while (fired && tries < game->escortCount) {
                     fired = fire_battleship(game, feature, minAngle,
