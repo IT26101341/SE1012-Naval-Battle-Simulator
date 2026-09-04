@@ -51,7 +51,7 @@ int choose_target(const Game *game, int feature, double minAngle,
             power = escort->impact;
         }
         /* A gun that can still hit B is a greater threat than a harmless E. */
-        canAttack = (escort->stepShots == 0) &&
+        canAttack = (feature >= PART_2B || escort->stepShots == 0) &&
                     find_shot(escort->position, game->battle.position,
                               escort->minSpeed, escort->maxSpeed,
                               escort->minAngle, escort->maxAngle,

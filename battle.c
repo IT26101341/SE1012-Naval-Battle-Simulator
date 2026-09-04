@@ -51,12 +51,30 @@ double run_position(Game *game, int feature, double minAngle,
 void simulate_field(Game *game, int feature, int field,
                     FILE *report, Result *result)
 {
+    int i;
+    int steps;
 
     /* Each selected battlefield starts with a clean event list and clock. */
     clear_shots(game);
     game->currentTime = 0.0;
     fprintf(report, "Feature: %d\nField style: %d\n", feature, field);
-    run_position(game, feature, 0.0, report, result, 1);
+    steps = field == STATIC_FIELD ? 1 : game->pathCount;
+    if (steps < 1) {
+        steps = 1;
+    }
+    /* Moving fields use every saved battleship position in order. */
+    for (i = 0; i < steps && game->battle.alive; i++) {
+        int escortIndex;
+        double minAngle = 0.0;
+        /* Part 1-style escorts receive one firing opportunity per path step. */
+        for (escortIndex = 0; escortIndex < game->escortCount; escortIndex++) {
+            game->escorts[escortIndex].stepShots = 0;
+        }
+        if (field != STATIC_FIELD && i < game->pathCount) {
+            game->battle.position = game->path[i];
+        }
+        run_position(game, feature, minAngle, report, result, i + 1);
+    }
     result->duration = game->currentTime;
     fprintf(report, "\nBattle duration: %.2f seconds\n", result->duration);
     fprintf(report, "Escorts destroyed: %d\n", result->escortsHit);

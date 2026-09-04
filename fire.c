@@ -35,7 +35,7 @@ int fire_escorts(Game *game, int feature, FILE *report, Result *result)
         Escort *escort = &game->escorts[i];
         double flightTime, angle, damage;
         int shotNumber;
-        if (!escort->alive || escort->stepShots > 0 ||
+        if (!escort->alive || (feature < PART_2B && escort->stepShots > 0) ||
             game->currentTime + 0.000001 < escort->nextFire) {
             continue;
         }
@@ -58,6 +58,9 @@ int fire_escorts(Game *game, int feature, FILE *report, Result *result)
         escort->shots = shotNumber;
         escort->stepShots++;
         escort->currentImpact = damage;
+        if (feature >= PART_2B) {
+            escort->nextFire = game->currentTime + escort->reload;
+        }
         result->escortShots++;
         fired++;
         fprintf(report, "Time %.2f: E%d fired at B (impact %.2f).\n",
@@ -76,7 +79,7 @@ double next_possible_fire(const Game *game, int feature, double minAngle)
     for (i = 0; i < game->escortCount && game->battle.alive; i++) {
         const Escort *escort = &game->escorts[i];
         double time;
-        if (!escort->alive || escort->stepShots > 0 ||
+        if (!escort->alive || (feature < PART_2B && escort->stepShots > 0) ||
             !find_shot(escort->position, game->battle.position,
                        escort->minSpeed, escort->maxSpeed,
                        escort->minAngle, escort->maxAngle,

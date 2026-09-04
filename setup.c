@@ -12,7 +12,10 @@ void first_setup(Game *game)
     game->battle.maxSpeed = read_double("Maximum shell speed (20-500): ", 20, 500);
     game->battle.position.x = read_double("Battleship X position: ", 0, game->canvas);
     game->battle.position.y = read_double("Battleship Y position: ", 0, game->canvas);
+
+    game->pathCount = read_int("Number of path points (2-10): ", 2, MAX_PATH);
     generate_battlefield(game);
+    generate_path(game);
 }
 
 void edit_setup(Game *game)

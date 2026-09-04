@@ -50,3 +50,15 @@ void generate_battlefield(Game *game)
     set_ship_properties(game); /* Fill values such as speed and damage. */
     reset_combat(game);        /* Start all ships in a fresh state. */
 }
+/* Start at the battleship, then create the remaining route points. */
+void generate_path(Game *game)
+{
+    int i;
+
+    srand(game->seed + 97); /* A different sequence from escort positions. */
+    game->path[0] = game->battle.position;
+    for (i = 1; i < game->pathCount; i++) {
+        game->path[i].x = random_place(game->canvas);
+        game->path[i].y = random_place(game->canvas);
+    }
+}

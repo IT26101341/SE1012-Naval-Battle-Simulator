@@ -42,4 +42,5 @@ void set_default_game(Game *game)
     game->battle.position.y = 500.0;
     game->battle.maxSpeed = 120.0;
     generate_battlefield(game); /* Build ships from the default seed. */
+    generate_path(game);        /* Build a default movement route. */
 }
