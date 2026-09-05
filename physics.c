@@ -53,3 +53,9 @@ int find_shot(Position start, Position end, double minSpeed,
     *usedAngle = angle;
     return 1;
 }
+
+double degraded_power(double startPower, double gamma, int shotNumber)
+{
+    /* Every new shot loses power according to exponential decay. */
+    return startPower * exp(-gamma * shotNumber);
+}

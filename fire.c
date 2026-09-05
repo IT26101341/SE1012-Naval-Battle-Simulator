@@ -11,7 +11,8 @@ int fire_battleship(Game *game, int feature, double minAngle,
     target = choose_target(game, feature, minAngle, &flightTime); /* Best valid escort. */
     if (target < 0) return 0;
     shotNumber = game->battle.shots + 1;
-    damage = 1.0;
+    damage = feature == PART_2C ? degraded_power(1.0,
+             game->battle.gamma, shotNumber) : 1.0;
     if (!add_shot(game, 1, target, game->currentTime + flightTime, damage)) { /* Queue impact. */
         return 0;
     }
@@ -48,7 +49,8 @@ int fire_escorts(Game *game, int feature, FILE *report, Result *result)
         shotNumber = escort->shots + 1;
         if (feature == PART_1A) { /* First feature uses simple one-hit damage. */
             damage = 1.0;
-
+        } else if (feature == PART_2C) {
+            damage = degraded_power(escort->impact, escort->gamma, shotNumber);
         } else {
             damage = escort->impact;
         }
