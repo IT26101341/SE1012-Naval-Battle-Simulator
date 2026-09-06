@@ -73,6 +73,11 @@ void simulate_field(Game *game, int feature, int field,
         if (field != STATIC_FIELD && i < game->pathCount) {
             game->battle.position = game->path[i];
         }
+        /* After the jam step, B cannot use firing angles below jamAngle. */
+        if (field == JAM_FIELD && i + 1 > game->jamStep) {
+            minAngle = game->jamAngle;
+            fprintf(report, "The battleship gun is jammed.\n");
+        }
         run_position(game, feature, minAngle, report, result, i + 1);
     }
     result->duration = game->currentTime;

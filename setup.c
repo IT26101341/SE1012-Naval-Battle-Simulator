@@ -14,6 +14,9 @@ void first_setup(Game *game)
     game->battle.position.y = read_double("Battleship Y position: ", 0, game->canvas);
 
     game->pathCount = read_int("Number of path points (2-10): ", 2, MAX_PATH);
+
+    game->jamStep = read_int("Gun jam step: ", 1, game->pathCount - 1);
+    game->jamAngle = read_double("Jammed minimum angle (1-29): ", 1.0, 29.0);
     generate_battlefield(game);
     generate_path(game);
 }

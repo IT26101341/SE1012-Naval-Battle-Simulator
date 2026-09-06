@@ -23,6 +23,6 @@ void run_all_simulations(const Game *base)
 {
     int feature, field;
     for (feature = 1; feature <= 5; feature++)
-        for (field = 1; field <= 2; field++)
+        for (field = 1; field <= 3; field++)
             run_one_simulation(base, feature, field);
 }

@@ -12,8 +12,8 @@ void start_menu(Game *game)
     puts("0. Run all available combinations");
     feature = read_int("Feature: ", 0, 5);
     if (feature == 0) { run_all_simulations(game); return; }
-    puts("1. Static  2. Path");
-    field = read_int("Field: ", 1, 2);
+    puts("1. Static  2. Path  3. Jammed");
+    field = read_int("Field: ", 1, 3);
     run_one_simulation(game, feature, field);
 }
 
