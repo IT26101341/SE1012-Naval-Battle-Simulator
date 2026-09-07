@@ -2,7 +2,7 @@
 #include "core.h"
 #include "menu.h"
 #include "simulation.h"
-
+#include "files.h"
 
 void start_menu(Game *game)
 {
@@ -35,7 +35,7 @@ void main_menu(Game *game)
         else if (choice == 2) edit_setup(game);
         else if (choice == 3) show_instructions();
         else if (choice == 4) {
-            puts("Reports and saved statistics are added on Day 12.");
+            show_statistics();
         } else if (read_yes_no("Exit? (y/n): ")) return;
     }
 }
