@@ -1,10 +1,8 @@
 #include <stdio.h>
 #ifdef _WIN32
 #include <direct.h>
-#define make_results() _mkdir("results")
 #else
 #include <sys/stat.h>
-#define make_results() mkdir("results", 0777)
 #endif
 #include "core.h"
 #include "files.h"
@@ -14,7 +12,11 @@ void append_history(const char *fileName, int feature, int field,
                     const Result *result)
 {
     FILE *file;
-    make_results();
+#ifdef _WIN32
+    _mkdir("results");
+#else
+    mkdir("results", 0777);
+#endif
     file = fopen("results/history.txt", "a");
     if (file == NULL) {
         printf("Could not save simulation history.\n");
@@ -41,7 +43,7 @@ void show_statistics(void)
     char line[512];
     int found = 0;
     file = fopen("results/history.txt", "r");
-    puts("Saved simulation history");
+    show_stats_art();
     if (file == NULL) {
         printf("No saved simulation history was found.\n");
         return;

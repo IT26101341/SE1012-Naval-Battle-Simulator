@@ -1,10 +1,8 @@
 #include <stdio.h>
 #ifdef _WIN32
 #include <direct.h>
-#define make_results() _mkdir("results")
 #else
 #include <sys/stat.h>
-#define make_results() mkdir("results", 0777)
 #endif
 #include "files.h"
 
@@ -35,7 +33,11 @@ FILE *open_report(int feature, int field, char fileName[], int size)
     FILE *report;
     int count = 0;
     /* The results folder is made when it does not already exist. */
-    make_results();
+#ifdef _WIN32
+    _mkdir("results");
+#else
+    mkdir("results", 0777);
+#endif
     /* Read, increase and save the persistent run number. */
     countFile = fopen("results/run_count.txt", "r");
     if (countFile != NULL) {
